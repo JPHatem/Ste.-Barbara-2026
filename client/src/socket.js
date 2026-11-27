@@ -1,14 +1,11 @@
 import { io } from "socket.io-client";
 
+// If VITE_API_URL is not set, this will use the live Vercel URL!
 const URL = import.meta.env.VITE_API_URL || window.location.origin;
 
 export const socket = io(URL, {
-  // 1. THIS MUST MATCH YOUR BACKEND EXACTLY
   path: "/api/socket/socket.io", 
-  
-  // 2. Vercel requires forcing websocket
   transports: ["websocket"], 
-  
   reconnection: true,
   reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,

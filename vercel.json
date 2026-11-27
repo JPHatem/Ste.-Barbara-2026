@@ -13,11 +13,11 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/socket/(.*)",
       "dest": "/server/index.js"
     },
     {
-      "src": "/socket.io/(.*)",
+      "src": "/api/(.*)",
       "dest": "/server/index.js"
     },
     {
