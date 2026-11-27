@@ -2,12 +2,14 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 
+// 1. Configure Socket.IO for Vercel
 const io = new Server(server, {
-  // Vercel requires this exact path for sockets
   path: '/api/socket/socket.io',
   cors: {
     origin: '*',
@@ -18,9 +20,6 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
-
-// ⚠️ NOTE: Multer and local file uploads will NOT work on Vercel.
-// You must remove them or switch to a cloud service like Cloudinary.
 
 // ---------- In-memory data store ----------
 let children = [];
@@ -98,5 +97,13 @@ io.on('connection', (socket) => {
   });
 });
 
-// THIS IS THE CRUCIAL   VERCEL EXPORT
-export default server;
+// ---------- SERVE FRONTEND (CRUCIAL FOR VERCEL) ----------
+// This tells Express to serve your React app from the client/dist folder
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
+// THIS IS THE CRUCIAL VERCEL EXPORT (Must use module.exports)
+module.exports = server;
