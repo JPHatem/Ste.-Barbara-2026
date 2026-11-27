@@ -364,14 +364,9 @@ export default function Home() {
             <Link to="/backstage" className="btn backstage-btn">
               Backstage
             </Link>
-            <a
-              href="/stage"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn stage-btn"
-            >
-              Stage
-            </a>
+            <Link to="/stage" className="btn stage-btn">
+  Stage
+</Link>
           </div>
         </div>
       </div>
