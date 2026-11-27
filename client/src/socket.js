@@ -3,8 +3,12 @@ import { io } from "socket.io-client";
 const URL = import.meta.env.VITE_API_URL || window.location.origin;
 
 export const socket = io(URL, {
-  path: "/socket.io", // Must match the Vercel route
-  transports: ["websocket"], // Vercel cannot do polling
+  // 1. THIS MUST MATCH YOUR BACKEND EXACTLY
+  path: "/api/socket/socket.io", 
+  
+  // 2. Vercel requires forcing websocket
+  transports: ["websocket"], 
+  
   reconnection: true,
   reconnectionAttempts: Infinity,
   reconnectionDelay: 1000,
