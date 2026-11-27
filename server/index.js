@@ -3,12 +3,10 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 
-// 1. Configure Socket.IO for Vercel
 const io = new Server(server, {
   path: '/api/socket/socket.io',
   cors: {
@@ -97,13 +95,22 @@ io.on('connection', (socket) => {
   });
 });
 
-// ---------- SERVE FRONTEND (CRUCIAL FOR VERCEL) ----------
-// This tells Express to serve your React app from the client/dist folder
+// ---------- SERVE FRONTEND (for Vercel / production) ----------
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('*', (req, res) => {
+// Express 5 needs a NAMED wildcard. `*` throws PathError.
+app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
-// THIS IS THE CRUCIAL VERCEL EXPORT (Must use module.exports)
+// ---------- START SERVER LOCALLY ----------
+// Only listen when run directly (not on Vercel, where the export is used).
+if (require.main === module) {
+  const PORT = process.env.PORT || 4000;
+  server.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Socket.IO path: /api/socket/socket.io`);
+  });
+}
+
 module.exports = server;

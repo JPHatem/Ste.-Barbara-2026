@@ -1,3 +1,5 @@
 
 .env
 client/.env
+.vercel
+.env*
