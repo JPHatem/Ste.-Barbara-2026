@@ -2,8 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/socket/(.*)",
-      "destination": "/api/index"
+      "source": "/api/(.*)",
+      "destination": "/server/index.js"
     },
     {
       "source": "/(.*)",
